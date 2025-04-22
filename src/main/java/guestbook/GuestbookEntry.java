@@ -18,6 +18,7 @@ package guestbook;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
@@ -36,6 +37,8 @@ class GuestbookEntry {
 
 	private @Id @GeneratedValue Long id;
 	private final String name, text;
+	@Column(nullable = false)
+	private final String gender;
 	private final LocalDateTime date;
 
 	/**
@@ -43,21 +46,29 @@ class GuestbookEntry {
 	 *
 	 * @param name must not be {@literal null} or empty
 	 * @param text must not be {@literal null} or empty
+	 * @param gender must not be {@literal null} or empty
 	 */
-	public GuestbookEntry(String name, String text) {
+	public GuestbookEntry(String name, String text, String gender) {
 
 		Assert.hasText(name, "Name must not be null or empty!");
 		Assert.hasText(text, "Text must not be null or empty!");
+		Assert.hasText(gender, "Gender must not be null or empty!");
 
 		this.name = name;
 		this.text = text;
+		this.gender = gender;
 		this.date = LocalDateTime.now();
+	}
+
+	public GuestbookEntry(String name, String text) {
+		this(name, text, "unspecified"); // Default gender
 	}
 
 	@SuppressWarnings("unused")
 	private GuestbookEntry() {
 		this.name = null;
 		this.text = null;
+		this.gender = null;
 		this.date = null;
 	}
 
@@ -67,6 +78,10 @@ class GuestbookEntry {
 
 	public Long getId() {
 		return id;
+	}
+
+	public String getGender() {
+		return gender; 
 	}
 
 	public LocalDateTime getDate() {
